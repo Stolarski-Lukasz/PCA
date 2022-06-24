@@ -1,0 +1,16 @@
+version: '2.4'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: ../Dockerfile
+    image: app
+    volumes:
+      - "./app:/app"
+      - "./data:/data"
+      - "./results:/results"
+    command: >
+      python app.py
+    ports:
+      - '9080:8080'

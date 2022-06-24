@@ -1,0 +1,3 @@
+Sitemap: https://pca.clarin-pl.eu/sitemap.xml
+User-agent:*
+Disallow:

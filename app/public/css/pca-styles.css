@@ -1,0 +1,116 @@
+[v-cloak] {
+    display: none !important;
+}
+
+/* this formatting fixes the scrolling too low problem: https://stackoverflow.com/questions/49331572/offset-scroll-anchor-in-html-with-bootstrap-4-fixed-navbar */
+.pca-html {
+    scroll-padding-top: 10px;
+    font-size: 17px;
+}
+
+#pca-vue-navbar {
+    margin-left: auto;
+    margin-right: 2em;
+}
+
+.pca-form {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+#pca-search-button {
+    height: 43px; 
+    width: 48px;
+}
+
+#pca-search-icon {
+    height: 20px; 
+    width: 20px;
+}
+
+.pca-searchoptions-heading-div-firstheading {
+    margin-left: 2em;
+    margin-top: 2em;
+}
+
+.pca-searchoptions-heading-div {
+    margin-left: 2em;
+    margin-top: 1em;
+}
+
+.pca-searchoptions-heading-p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+}
+
+.pca-searchoptions-radiobuttons {
+    margin-left: 2em;
+}
+
+.pca-topnav-togglebutton {
+    width: 55px;
+    height: 45px;
+}
+
+.pca-pagination-span {
+    padding: 0px 10px;
+}
+
+.pca-keyword-span {
+    padding: 0px 5px;
+}
+
+.pca-form-select {
+    width: 60px;
+    margin-left: 10px;
+}
+
+.pca-results-icon-play,
+.pca-results-icon-download,
+.pca-results-icon-info {
+    width: 1.6em;
+    height: 1.6em;
+    margin-left: 2px;
+    margin-right: 2px;
+    cursor: pointer;
+    border-radius: 25px;
+    box-shadow: none;
+}
+
+.pca-results-paragraph {
+    margin-bottom: 0px;
+}
+
+.regex_result {
+    font-size: large;
+}
+
+.regex_result:hover {
+    padding: 0px 4px;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0 0 0 3px #81b441;
+}
+
+.pca-regexresults-paragraph {
+    margin: 0px;
+}
+
+
+/* final decoration of Bootstrap elements */
+#wrapper {
+    background-image: url("../img/background.png");
+}
+
+.card {
+    background-image: url("../img/background.png");
+}
+
+#sidebar-wrapper {
+    box-shadow: 0 0 3px 1px #2e3338;
+}
+
+.modal-content {
+    background-image: url("../img/background.png");
+}

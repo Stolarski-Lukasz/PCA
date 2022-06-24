@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+  <div class="container-fluid">
+      <!-- <button class="btn btn-outline-secondary" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button> -->
+      <button class="btn btn-outline-secondary border-0 p-0" id="sidebarToggle"><img src="/static/img/sidebar_expand_toggle_icon.png" class="pca-topnav-togglebutton"/></button>
+      <!-- <img src="/media/luke/WORK/Programming/pca_rework/startbootstrap simple side bar template/startbootstrap-simple-sidebar-gh-pages/assets/sidebar_expand_toggle_nav_icon_.png" id="sidebarToggle" style="width: 35px; height: 35px; cursor: pointer"/> -->
+      <span class="text-light text-opacity-75 ms-4 fs-5">
+          Phonetic Corpus of Audiobooks
+        </span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pca-navbar" aria-controls="pca-navbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+
+        <div class="collapse navbar-collapse" id="pca-navbar">
+          <ul class="navbar-nav" id="pca-vue-navbar">
+              <li class="nav-item">
+                  <a class="nav-link" id="home" href="home">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link active" id="documentation" href="documentation">Documentation</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="tutorial" href="tutorial">Tutorial</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="contact" href="contact">Contact</a>
+              </li>
+          </ul>
+      </div>       
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <br>
+      <br>
+
+      <p class='welcome_paragraph'>Contents:</p>
+      <ol>
+        <li><a href="#Purpose">Purpose</a>
+        </li>
+        <li><a href="#Materials used">Materials used</a></li>
+        <li><a href="#Creation of the corpus">Creation of the corpus</a></li>
+        <li><a href="#Corpus functionality">Corpus functionality</a>
+          <ol>
+            <li><a href="#Simple queries">"Simple" queries</a></li>
+            <li><a href="#Wildcards">Wildcards</a></li>
+            <li><a href="#Filtering options">Filtering options</a></li>
+            <ol>
+              <li><a href="#Context">Context</a></li>
+              <li><a href="#Function">Function</a></li>
+              <li><a href="#Readers' characteristics">Reader's gender, reader's dialect, author's gender</a>
+              </li>
+            </ol>
+          </ol>
+        </li>
+        <li><a href="#Corpus statistics">Corpus statistics</a>
+          <ol>
+            <li><a href="#Text and audio statistics">Text and audio statistics</a></li>
+            <li><a href="#Reader statistics">Reader statistics</a></li>
+          </ol>
+        </li>
+        <li><a href="#Browser compatibility">Browser compatibility</a></li>
+        <li><a href="#Licence">Licence</a></li>
+      </ol>
+
+      <ol>
+        <li id="Purpose" class="bold_numbering"><strong>Purpose</strong>
+          <p class='help_paragraph'>The Phonetic Corpus of Audiobooks (PCA) was created, first and foremost, for
+            obtaining audio data that can be used for a variety of phonetic or acoustic research on speech and
+            articulation. There are many general-purpose corpora of the English language available online, such
+            as the Corpus of Contemporary American English (COCA) or the British National Corpus (BNC). They
+            offer written text only, even if it is based on spoken language (for BNC, however, some audio
+            materials may be downloaded with the use of the interface available at http://bncweb.lancs.ac.uk).
+            PCA is unique in that it offers easy access to audio recordings at the sentence level. The user may
+            look for individual words and phrases (see Section 4.1) or speech sound combinations (see Section
+            4.2). If the search items are located in the corpus database, the fragments of audiobooks in which
+            they can be found will be available for audio playback directly from the web browser as well as for
+            download as mp3 files. These files may later be used for analysis in any speech analysis software.
+            The corpus also allows researchers to narrow down their search parameters according to author,
+            reader and text criteria (see Section 4.3), all of which is useful for sociophonetic investigations.
+          </p>
+          <p class='help_paragraph'>In addition to the major purposes specified above, the corpus may be used in
+            other types of linguistic research and domains related to natural language.</p>
+        </li>
+        <li id="Materials used" class="bold_numbering"><strong>Materials used</strong>
+          <p class='help_paragraph'>The audiobooks used in the corpus were downloaded from
+            "https://librivox.org", which is a non-profit library of free audiobooks recorded by volunteers. The
+            website was initiated in 2005 by Hugh McGuire. It offers more than 12,000 finished projects, most of
+            which are novels in English.</p>
+          <p class='help_paragraph'>The corresponding text versions of the novels were found at
+            "https://www.gutenberg.org", which offers over 58,000 free e-books in numerous formats. Founded in
+            1971by Michael S. Hart, it is the oldest digital library.</p>
+          <p class='help_paragraph'>To find out which audiobooks and e-books were used in this project, as well
+            as other background data and corpus statistics, see Section 5 below.</p>
+        </li>
+        <li id="Creation of the corpus" class="bold_numbering"><strong>Creation of the corpus</strong>
+          <p class='help_paragraph'>At the initial stage of the project, 104 English audiobooks were downloaded
+            from "https://librivox.org". In order to obtain a sample representing different dialects and
+            genders, only these audiobooks were chosen which were read by groups of readers, rather than an
+            individual person. After that, the corresponding text versions of the novels were found at
+            "https://www.gutenberg.org". With the use of a Python script, the texts were divided into
+            syntactically and prosodically independent units. In many cases, these are "orthographic sentences",
+            defined as any portion of text ending in either "." or "!" or "?". In dialogues, however, such
+            simple segmentation does not always work. It is quite common for the narrator to interrupt a given
+            character's utterance, as in the example below:</p>
+          <p class='help_paragraph'>'Take off your cap, child,' said Miss Betsey, 'and let me see you.'
+            (<em>David Copperfield</em> by Charles Dickens, Chapter 1)</p>
+          <p class='help_paragraph'>According to the orthographic definition, the fragment constitutes one
+            sentence, but from both the syntactic and prosodic points of view, we are dealing with two separate
+            utterances: the part expressed by the character and the narrator's comment. For such cases, a script
+            in Python was written which divided such sentences into smaller parts. The resulting segmentation
+            for this particular example would be: 1) 'Take off your cap, child', 2) said Miss Betsey, 3) 'and
+            let me see you'.</p>
+          <p class='help_paragraph'>Next, such "sentences" (or rather "text units") were automatically aligned
+            with the corresponding parts in audiobooks using <em>Aeneas</em>, which is a Python/C library
+            designed to automatically synchronize audio and text. Additionally, with the use of various scripts
+            written in Python, all the text units and the corresponding recordings were classified according to
+            a rage of criteria, such as context (narrator vs. dialogue), pragmatic function (statement/directive
+            vs. question vs. exclamative statement), reader's gender (female vs. male), reader's dialect (North
+            America vs. Great Britain vs. Australia/New Zealand vs. other/non-native), author's gender (female
+            vs. male) etc.</p>
+          <p class='help_paragraph'>Once the database was ready, several technologies used in web development
+            were utilized to create an online application with an intuitive graphic user interface.</p>
+        </li>
+        <li id="Corpus functionality" class="bold_numbering"><strong>Corpus functionality</strong>
+          <ol>
+            <li id="Simple queries" class="bold_numbering"><strong>"Simple" queries</strong>
+              <p class='help_paragraph'>You can start using the corpus by typing a word or phrase in the search
+                bar. An example result is presented below.</p>
+              <div>
+                <br>
+              </div>
+              <div class='help_graphics'>
+                <img src="/static/img/normal_search.jpg" width="600" height="271" />
+              </div>
+              <div>
+                <br>
+              </div>
+              <p class='help_paragraph'>1 – the navigation bar, which includes the search icon (searching may be
+                initiated from any other option chosen, but this icon will be activated once the search has
+                started), the help icon, the tutorial icon (you may watch a video tutorial offering a
+                comprehensive introduction to the functionality of the corpus) and the contact icon</p>
+              <p class='help_paragraph'>2 – search bar</p>
+              <p class='help_paragraph'>3 – filtering options (see Section 4.3 for details)</p>
+              <p class='help_paragraph'>4 – pagination panel – "previous page" and "next page". Between these
+                icons, you can see the numbers referring to the currently displayed examples, and after the
+                forward slash "/" the number of all examples of the search term found in the corpus </p>
+              <p class='help_paragraph'>5 – "left margin" - you may change the default value of 0 to any digit
+                between 1 and 5. This specifies the number of seconds added to the beginning of the audio
+                fragment</p>
+              <p class='help_paragraph'>6 – "right margin" - you may change the default value of 0 to any digit
+                between 1 and 5. This specifies the number of seconds added to the end of the audio fragment</p>
+              <p class='help_paragraph'>7 – "play button" - the button opens a new window in which the recording
+                is played. If a new window does not open, change the settings in your browser or disable your ad
+                blocking application.</p>
+              <p class='help_paragraph'>8 - "download button" - the button initiates a download of the audio
+                file. If the download does not start automatically, change the settings in your browser or
+                disable your ad blocking application.</p>
+              <p class='help_paragraph'>9 – results section – you may click any of the text units and a new
+                window will open with the details concerning the author, the novel, the reader, the context
+                (narrator vs. dialogue), the function (statement/directive vs. question vs. exclamative
+                statement) and the location of the recording in the source audio file</p>
+            </li>
+            <li id="Wildcards" class="bold_numbering"><strong>Wildcards</strong>
+              <p class='help_paragraph'>At this moment, four wildcards are available:</p>
+              <p class='help_paragraph'><strong>?</strong> for "one character". For instance, the query "an?"
+                returns the following 9 types: <em>and, any, ann, ant, ane, ana, anb, anz</em> and <em>ans</em>.
+                The last three are hapaxes occurring only once in the entire corpus.</p>
+              <p class='help_paragraph'><strong>*</strong> for "one or more characters". For instance, the query
+                "an*" returns as many as 448 types including all the ones found in the previous example and
+                words such as <em>another, anything</em> or <em>answered</em>.</p>
+              <p class='help_paragraph'><strong>=c</strong> for "a consonant letter". The wildcard stands for
+                any letter which typically represents consonants in articulation. These letters are <em>b, c, d,
+                  f, g, h, j, k, l, m, n, p, q, r, s, t, w, v, x, z</em> (although <em>w</em> may also be used
+                to represent diphthongs, as in <em>how</em>). For example, the query "an=c" returns the
+                following types: <em>and, ann, ant, anb, anz</em> and <em>ans</em>.</p>
+              <p class='help_paragraph'><strong>=v</strong> for "a vowel letter". The wildcard stands for any
+                letter which typically represents vowels in articulation. These letters are <em>a, e, o, u, i,
+                  y</em> (<em>y</em> may also be used to represent the approximant /j/, as in <em>yes</em>). For
+                instance, the query "an=v" returns <em>any, ane, ana</em>. </p>
+              <p class='help_paragraph'>The "consonant" and "vowel" letters do not represent individual
+                consonant and vowel phonemes because of the large distance between spelling and pronunciation in
+                modern English. These wildcards may be, however, quite useful in narrowing down searches.</p>
+              <p class='help_paragraph'>All four wildcards may also be freely combined. For example, the query
+                "=c=v=v=c* ?o?" returns a large number of pairs of words. Each first word begins with a
+                consonant letter, followed by two vowel letters, followed by another consonant letter and
+                followed by 1 or more characters. Each second word begins with one character, followed by the
+                letter "o", followed by another single character. The results include phrases such as <em>could
+                  not, waiting for</em> and <em>heard you</em>.</p>
+            </li>
+            <li id="Filtering options" class="bold_numbering"><strong>Filtering options</strong>
+              <p class='help_paragraph'>Searches can be filtered according to selected text, reader and author
+                attributes. At the current stage of development, the corpus interface includes the 5 options
+                listed below, but new categories may be added in the future.</p>
+              <ol>
+                <li id="Context" class="bold_numbering"><strong>Context</strong>
+                  <p class='help_paragraph'>As described in Section 3, the text of the novels has been divided
+                    into semantically and prosodically independent fragments, which, in many cases, are
+                    "orthographic sentences". In dialogues, however, narrator's comments which interrupt a
+                    character's utterance are classified as separate units. With this type of tokenization it
+                    was possible to write a script which automatically classifies the text units into either
+                    "narration" or "dialogue". The script makes use of numerous punctuation conventions used in
+                    dialogues. </p>
+                  <p class='help_paragraph'>In a validation test involving 500 text units taken randomly from
+                    the corpus database, only 9 were classified incorrectly. On the basis of this result, the
+                    predicted proportion of cases which are misclassified in terms of context is 1.8% (95% CI:
+                    0.88% - 3.51%).</p>
+                  <div>
+                    <br>
+                  </div>
+                </li>
+                <li id="Function" class="bold_numbering"><strong>Function</strong>
+                  <p class='help_paragraph'>The function variable refers to the pragmatic categories of meaning
+                    as proposed by Huddlestone (1988). In Speech Act Theory (Austin, 1962) they are associated
+                    with the notion of "illocutionary force".In direct speech acts, they are prototypically
+                    linked to grammatical forms in the following manner:</p>
+                  <div>
+                    <br>
+                  </div>
+                  <div class='help_graphics'>
+                    <img src="/static/img/grammatical_form_illocution.jpg" />
+                  </div>
+                  <div>
+                    <br>
+                  </div>
+                  <p class='help_paragraph'>The function distinction refers to the categories of meaning rather
+                    than the grammatical forms for two related reasons:</p>
+                  <p class='help_paragraph'>1. The automatic classification is based on punctuation conventions
+                    applied in the English language; these reflect the intended meaning rather than the
+                    grammatical form. Text units ending with a question mark were classified as questions
+                    regardless of whether the speech act was direct (the grammatical form was "interrogative"),
+                    or indirect (the grammatical form was "declarative", "imperative" or "exclamative"). The
+                    question mark normally signals that the expression is meant to be a question, regardless of
+                    the grammatical form. In spoken language, such information is usually conveyed by applying
+                    the intended intonational patterns. A similar strategy was used for exclamatory statements
+                    marked by the exclamation mark. All other text units were classified as
+                    "statement/directive". Unfortunately, there was no reliable way to discriminate between the
+                    two categories with the methodology applied.</p>
+                  <p class='help_paragraph'>2. The categories of meaning tend to affect prosodic aspects of
+                    voice more than grammatical form (as implied above, a text unit with the question mark at
+                    the end is likely to be read using any of the intonation patterns typical for questions,
+                    even if its grammatical form is declarative).</p>
+                  <div>
+                    <br>
+                  </div>
+                </li>
+                <li id="Readers' characteristics" class="bold_numbering"><strong>Reader's gender, reader's
+                    dialect, author's gender</strong>
+                  <p class='help_paragraph'>The gender for each reader was established on the basis of auditory
+                    assessment (by the creator of the corpus). The same method was applied when establishing the
+                    reader's dialect, in which case four broad categories were used:</p>
+                  <p class='help_paragraph'>1. Great Britain -for any dialect spoken on the British Isles. Most
+                    of the readers falling into this category use Received Pronunciation, but there are also
+                    cases in which some readers exhibit characteristics of regional varieties of British
+                    English.</p>
+                  <p class='help_paragraph'>2. North America – for any dialect spoken in the United States of
+                    America and in Canada.</p>
+                  <p class='help_paragraph'>3. Australia/New Zealand – as the name suggests, for any dialects
+                    used in Australia or New Zealand.</p>
+                  <p class='help_paragraph'>4. Other/non-native – other readers were put into this category.
+                    Most of them are not native speakers of English.</p>
+                  <p class='help_paragraph'>Even using such broad categories, the dialect classification was
+                    demanding and the results may not be fully accurate. This is true especially for the
+                    distinction between British English and Australian English. For this reason, the <span
+                      class="help_warning">dialect distinctions should be used with caution at this stage of the
+                      development of the corpus.</span></p>
+                  <p class='help_paragraph'>The classification of the author's gender was a straightforward
+                    task.</p>
+                  <div>
+                    <br>
+                  </div>
+                  <div>
+                    <br>
+                  </div>
+                </li>
+              </ol>
+          </ol>
+        </li>
+        <li id="Corpus statistics" class="bold_numbering"><strong>Corpus statistics</strong>
+          <div>
+            <br>
+          </div>
+          <ol>
+            <li id="Text and audio statistics" class="bold_numbering"><strong>Text and audio statistics</strong>
+              <p class='help_paragraph'>The corpus is based on 104 novels written mostly in the nineteenth and
+                early twentieth centuries. They contain 10,407,032 word tokens and were divided into 673,610
+                text units.</p>
+              <p class='help_paragraph'>The corresponding audio recordings last over 1,104 hours. The average
+                duration of one audiobook is over 10 hours.</p>
+              <p class='help_paragraph'>For more details on both the novels and the audio recordings click <a
+                  href="/static/doc/PCLA_audio_and_text_statistics.pdf">HERE</a>.</p>
+              <div>
+                <br>
+              </div>
+              <div>
+                <br>
+              </div>
+            </li>
+            <li id="Reader statistics" class="bold_numbering"><strong>Reader statistics</strong>
+              <div>
+                <br>
+              </div>
+              <div class='help_graphics'>
+                <img src="/static/img/readers_statistics.jpg" width="600" height="151" />
+              </div>
+              <div>
+                <br>
+              </div>
+              <p class='help_paragraph'>As illustrated in the table above, the audiobooks were read by 647
+                different readers. The majority of them (455) use one of the varieties of English spoken in the
+                United States of America or Canada. Other dialects are much less popular.</p>
+              <p class='help_paragraph'>In terms of gender, there are more female readers (420) than male
+                readers
+                (226).</p>
+              <div>
+                <br>
+              </div>
+              <div>
+                <br>
+              </div>
+            </li>
+          </ol>
+        </li>
+        <li id="Browser compatibility" class="bold_numbering"><strong>Browser compatibility</strong>
+          <p class='help_paragraph'>The corpus makes use of the front-end web technology called "grid". The
+            feature is supported by all major browsers since 2017, but it is not supported in older versions.
+            Therefore, <span class="help_warning">use the latest version of Chrome, Firefox, Opera or Edge to
+              avoid problems with the display.</span>
+          </p>
+          <div>
+            <br>
+          </div>
+          <div>
+            <br>
+          </div>
+        </li>
+        <li id="Licence" class="bold_numbering"><strong>Licence</strong>
+          <p class='help_paragraph'>The corpus uses text and audio materials which are in the public domain.
+            They may be used for research and many other purposes. For details visit "https://librivox.org" (for
+            audio recordings) and "https://www.gutenberg.org" (for texts).</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

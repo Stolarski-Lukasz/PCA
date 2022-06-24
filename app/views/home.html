@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+    <div class="container-fluid">
+        <!-- <button class="btn btn-outline-secondary" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button> -->
+        <button class="btn btn-outline-secondary border-0 p-0" id="sidebarToggle"><img
+                src="/static/img/sidebar_expand_toggle_icon.png" class="pca-topnav-togglebutton" /></button>
+        <!-- <img src="/media/luke/WORK/Programming/pca_rework/startbootstrap simple side bar template/startbootstrap-simple-sidebar-gh-pages/assets/sidebar_expand_toggle_nav_icon_.png" id="sidebarToggle" style="width: 35px; height: 35px; cursor: pointer"/> -->
+        <span class="text-light text-opacity-75 ms-4 fs-5">
+            Phonetic Corpus of Audiobooks
+        </span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pca-navbar"
+            aria-controls="pca-navbar" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+
+        <div class="collapse navbar-collapse" id="pca-navbar">
+            <ul class="navbar-nav" id="pca-vue-navbar">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home" href="home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="documentation" href="documentation">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tutorial" href="tutorial">Tutorial</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact" href="contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col">
+            <br>
+            <br>
+            <div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="card-text" style="color: #dc3545;">Please note that this site is still in
+                            the development
+                            stage. It provides a
+                            limited number of options and some of them may not always work properly.
+                        </p>
+                        <p class="card-text">Welcome to Phonetic Corpus of Audiobooks. The corpus is based
+                            on a selection
+                            of free audiobooks available at librivox.org.
+                        </p>
+                        <p class="card-text">You may look for individual words or phrases using the search
+                            panel to the left. Use filtering options or available wildcards if you need to
+                            narrow
+                            down your search. If a given word or phrase is found in the corpus database, you
+                            may
+                            listen to the corresponding recordings, download them as mp3 files and see
+                            additional
+                            statistics on the sources from which they were taken.
+                        </p>
+                        <p class="card-text">Click on the help icon to find out more about the corpus. You
+                            may also watch a video tutorial offering a comprehensive introduction to the
+                            functionality of the corpus.
+                        </p>
+                        <p class="card-text">Please contact Łukasz Stolarski if you would like to report a
+                            bug or make suggestions for the future development of this site.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
