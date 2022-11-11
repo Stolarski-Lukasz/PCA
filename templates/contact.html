@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+  <div class="container-fluid">
+    <!-- <button class="btn btn-outline-secondary" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button> -->
+    <button class="btn btn-outline-secondary border-0 p-0" id="sidebarToggle"><img
+        src="/static/img/sidebar_expand_toggle_icon.png" class="pca-topnav-togglebutton" /></button>
+    <!-- <img src="/media/luke/WORK/Programming/pca_rework/startbootstrap simple side bar template/startbootstrap-simple-sidebar-gh-pages/assets/sidebar_expand_toggle_nav_icon_.png" id="sidebarToggle" style="width: 35px; height: 35px; cursor: pointer"/> -->
+    <span class="text-light text-opacity-75 ms-4 fs-5">
+      Phonetic Corpus of Audiobooks
+    </span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pca-navbar"
+      aria-controls="pca-navbar" aria-expanded="false" aria-label="Toggle navigation"><span
+        class="navbar-toggler-icon"></span></button>
+
+    <div class="collapse navbar-collapse" id="pca-navbar">
+      <ul class="navbar-nav" id="pca-vue-navbar">
+        <li class="nav-item">
+          <a class="nav-link" id="home" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="documentation" href="{% url 'documentation' %}">Documentation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="tutorial" href="{% url 'tutorial' %}">Tutorial</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" id="contact" href="{% url 'contact' %}">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xs-12" style="height:1em;"></div>
+  <div class="col-xs-12" style="height:1em;"></div>
+  <div class="row align-items-center">
+    <div class="col text-center d-flex justify-content-center">
+      <p class='welcome_paragraph'>Łukasz Stolarski<br>Jan Kochanowski University in Kielce,
+        Poland<br><br>lukasz.stolarski@ujk.edu.pl</p>
+    </div>
+    <div class="col text-center d-flex justify-content-center">
+      <img src="/static/img/authors_photo.png" />
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,493 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="pca-html">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Phonetic Corpus of Audiobooks</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
+    <!-- Core theme StartBootstrap CSS (includes Bootstrap)-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sb-styles.css' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+        crossorigin="anonymous"></script>
+    <!-- PCA styles -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pca-bootstrap-customization.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pca-styles.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pca-dropdowns.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/green-audio-player.css' %}" />
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper" v-cloak>
+        <!-- Sidebar-->
+        <div class="bg-dark border-end border-secondary shadow" id="sidebar-wrapper">
+            <div class="row m-0 p-3">
+                <div class="col text-center d-flex justify-content-center m-0 p-0">
+                    <p class="bg-dark text-light text-opacity-75 m-0 p-2" style="font-size: large;">Search Panel</p>
+                </div>
+            </div>
+            <div class="list-group list-group-flush text-light text-opacity-75">
+
+                <form class="pca-form" v-on:submit.prevent="">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                            aria-describedby="pca-search-button" id="pca-search-input" />
+                        <!-- version of the search button with the icon defined as a class in Bootstrap -->
+                        <!-- <button class="btn btn-primary" id="pca-search-button" type="button" v-on:click="search"><i
+                                class="fas fa-search"></i></button> -->
+                        <div v-if="searching">
+                            <button class="btn btn-primary" id="pca-search-button" type="button">
+                                <span class="spinner-border spinner-border-sm text-dark" role="status" aria-hidden="true"></span>
+                                <span class="visually-hidden">Loading...</span>
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button class="btn btn-primary" id="pca-search-button" type="button" v-on:click="search">
+                                <img src="/static/img/magnifying-glass-solid-dark.png" id="pca-search-icon">
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-heading-div-firstheading">
+                        <p class="pca-searchoptions-heading-p">Context</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-radiobuttons">
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="context"
+                                id="flexRadioDefault1" value="all" checked>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                all
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="context"
+                                id="flexRadioDefault2" value="narrator">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                narrator
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="context"
+                                id="flexRadioDefault3" value="dialogue">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                dialogue
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-heading-div">
+                        <p class="pca-searchoptions-heading-p">Function</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-radiobuttons">
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="function"
+                                id="flexRadioDefault4" value="all" checked>
+                            <label class="form-check-label" for="flexRadioDefault4">
+                                all
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="function"
+                                id="flexRadioDefault5" value="statement/directive">
+                            <label class="form-check-label" for="flexRadioDefault5">
+                                statement/directive
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="function"
+                                id="flexRadioDefault6" value="question">
+                            <label class="form-check-label" for="flexRadioDefault6">
+                                question
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="function"
+                                id="flexRadioDefault7" value="exclamative statement">
+                            <label class="form-check-label" for="flexRadioDefault7">
+                                exclamative statement
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-heading-div">
+                        <p class="pca-searchoptions-heading-p">Reader's gender</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col pca-searchoptions-radiobuttons">
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="readers_gender"
+                                id="flexRadioDefault8" value="all" checked>
+                            <label class="form-check-label" for="flexRadioDefault8">
+                                all
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="readers_gender"
+                                id="flexRadioDefault9" value="female">
+                            <label class="form-check-label" for="flexRadioDefault9">
+                                female
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input checkboxes_series" type="radio" name="readers_gender"
+                                id="flexRadioDefault10" value="male">
+                            <label class="form-check-label" for="flexRadioDefault10">
+                                male
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col pca-searchoptions-heading-div">
+                            <p class="pca-searchoptions-heading-p">Reader's dialect</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col pca-searchoptions-radiobuttons">
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="readers_dialect"
+                                    id="flexRadioDefault11" value="all" checked>
+                                <label class="form-check-label" for="flexRadioDefault11">
+                                    all
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="readers_dialect"
+                                    id="flexRadioDefault12" value="great britain">
+                                <label class="form-check-label" for="flexRadioDefault12">
+                                    Great Britain
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="readers_dialect"
+                                    id="flexRadioDefault13" value="north america">
+                                <label class="form-check-label" for="flexRadioDefault13">
+                                    North America
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="readers_dialect"
+                                    id="flexRadioDefault14" value="australia/new zealand">
+                                <label class="form-check-label" for="flexRadioDefault14">
+                                    Australia/New Zealand
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="readers_dialect"
+                                    id="flexRadioDefault15" value="other/non-native">
+                                <label class="form-check-label" for="flexRadioDefault15">
+                                    other/non-native
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col pca-searchoptions-heading-div">
+                            <p class="pca-searchoptions-heading-p">Author's gender</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col pca-searchoptions-radiobuttons">
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="authors_gender"
+                                    id="flexRadioDefault16" value="all" checked>
+                                <label class="form-check-label" for="flexRadioDefault16">
+                                    all
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="authors_gender"
+                                    id="flexRadioDefault17" value="female">
+                                <label class="form-check-label" for="flexRadioDefault17">
+                                    female
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes_series" type="radio" name="authors_gender"
+                                    id="flexRadioDefault18" value="male">
+                                <label class="form-check-label" for="flexRadioDefault18">
+                                    male
+                                </label>
+                            </div>
+                            <div class="col-xs-12" style="height:1em;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            {% block navigation %}{% endblock %}
+
+            <!-- Page content-->
+            <div class="container-fluid">
+                <main v-if="results_morethanzero">
+                    <div class="container-fluid px-4">
+                        <div class="row justify-content-center">
+                            <div class="col">
+                                <br>
+                                <br>
+                                <div class="row justify-content-center">
+                                    <div class="col text-center d-flex justify-content-center">
+                                        <div class="btn-group btn-group-sm" role="group"
+                                            aria-label="Basic mixed styles example">
+                                            <!-- I could not format the buttons using a new class in css... -->
+                                            <button class="btn btn-dark pagination_previous_button"
+                                                style="padding: 5px 15px" v-on:click="pagination" disabled>
+                                                &laquo;
+                                            </button>
+                                            <span class="pca-pagination-span align-self-center">${
+                                                pagination_info_data }$</span>
+                                            <button class="btn btn-dark pagination_next_button"
+                                                style="padding: 5px 15px" v-on:click="pagination">
+                                                &raquo;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+                                <div v-for="result in results_arrayofarrays">
+                                    <div class="row">
+                                        <div class="col-sm-10 pe-3 text-center d-flex justify-content-center">
+                                            <p class="pca-results-paragraph">
+                                                <!-- this template element added so that the for loop repeats only the contents of the paragraph, not paragraph itself if I placed it above -->
+                                                <template v-for="trio in result">
+                                                    ${ trio[0] }$
+                                                    <span
+                                                        class="pca-keyword-span border border-primary border-3 rounded">${
+                                                        trio[1]
+                                                        }$</span>
+                                                    ${ trio[2] }$
+                                                </template>
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-2 col-sm text-center d-flex justify-content-center">
+                                            <div class="pca-info-icon-container">
+                                                <img src="/static/img/info.png" class="pca-results-icon-info"
+                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                    v-on:click="get_info">
+                                            </div>
+                                            <div class="custom-select">
+                                                <select>
+                                                    <option value="0">0</option>
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <div class="custom-select">
+                                                <select>
+                                                    <option value="0">0</option>
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <div class="pca-action-icons-container">
+                                                <img src="/static/img/play_icon.png" class="pca-results-icon-play"
+                                                    data-bs-toggle="modal" data-bs-target="#staticBackdropPlay"
+                                                    v-on:click="play">
+                                            </div>
+                                            <div class="pca-action-icons-container">
+                                                <img src="/static/img/download_icon.png"
+                                                    class="pca-results-icon-download" v-on:click="download">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <br>
+                                <br>
+                                <div class="row justify-content-center">
+                                    <div class="col text-center d-flex justify-content-center">
+                                        <div class="btn-group btn-group-sm" role="group"
+                                            aria-label="Basic mixed styles example">
+                                            <!-- I could not format the buttons using a new class in css... -->
+                                            <button class="btn btn-dark pagination_previous_button"
+                                                style="padding: 5px 15px" v-on:click="pagination" disabled>
+                                                &laquo;
+                                            </button>
+                                            <span class="pca-pagination-span align-self-center">${
+                                                pagination_info_data }$</span>
+                                            <button class="btn btn-dark pagination_next_button"
+                                                style="padding: 5px 15px" v-on:click="pagination">
+                                                &raquo;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+
+                                <!-- Modal Info-->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Text unit details
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    Author: ${ author }$
+                                                    <br>
+                                                    Author's gender: ${ authors_gender }$
+                                                </p>
+                                                <p>
+                                                    Novel: ${ novel }$
+                                                    <br>
+                                                    Chapter: ${ chapter_title }$
+                                                    <br>
+                                                    Chapter number: ${ chapter_number }$
+                                                </p>
+                                                <p>
+                                                    Reader: ${ reader }$
+                                                    <br>
+                                                    Reader's gender: ${ readers_gender }$
+                                                    <br>
+                                                    Reader's dialect: ${ readers_dialect }$
+                                                </p>
+                                                <p>
+                                                    Context: ${ context }$
+                                                    <br>
+                                                    Function: ${ text_function }$
+                                                </p>
+                                                <p>
+                                                    Audio start in chapter: ${ audio_start_in_chapter }$ sec
+                                                    <br>
+                                                    Audio finish in chapter: ${ audio_finish_in_chapter }$ sec
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-dark"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <!-- <button type="button" class="btn btn-primary">Understood</button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Play -->
+                                <div class="modal fade" id="staticBackdropPlay" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Play audio
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close" v-on:click="stop_audio"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col text-center d-flex justify-content-center">
+                                                        <div class="ready-player-1">
+                                                            <audio crossorigin preload="none" id="audio_element"
+                                                                autoplay>
+                                                                <source src="audio/example-1.mp3" type="audio/mpeg"
+                                                                    id="audio_source">
+                                                            </audio>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal"
+                                                    v-on:click="stop_audio">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <main v-else-if="results_regex">
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col text-center d-flex justify-content-center">
+                            <p class="fs-5"> ${ regex_results_heading }$</p>
+                        </div>
+                    </div>
+                    <div class="container-fluid px-4">
+                        <div class="row justify-content-center">
+                            <div class="col-10">
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="pca-regexresults-paragraph"
+                                            v-for="regex_result in regex_results_data"><span class="regex_result"
+                                                v-on:click="search"> ${ regex_result[0] }$ &nbsp;&nbsp;&nbsp; ${
+                                                regex_result[1] }$</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <main v-else-if="results_zero">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col text-center d-flex justify-content-center">
+                            <p>No matches were found.</p>
+                        </div>
+                    </div>
+                </main>
+                <main v-else>
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core StartBootstrap theme JS-->
+    <script type="text/javascript" src="{% static 'js/sb-scripts.js' %}"></script>
+    <!-- Vue JS-->
+    <script src="https://unpkg.com/vue@3.2.33/dist/vue.global.prod.js"></script>
+    <!-- PCA scripts -->
+    <script type="module" src="{% static 'js/pca-vue-main.js' %}"></script>
+    <script type="module" src="{% static 'js/pca-search-on-enter.js' %}"></script>
+    <!-- Custom audio player-->
+    <script src="{% static 'js/green-audio-player.js' %}"></script>
+</body>
+
+</html>
