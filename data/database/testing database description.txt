@@ -1,0 +1,15 @@
+the sample is balanced for reader and author characteristics:
+
+reader
+1 m bre
+1 f bre
+1 m ame
+1 f ame
+
+for all these cases each one is represented for 2 genders of the authors:
+1 m
+2 f
+
+so, there are 8 recordings
+
+
