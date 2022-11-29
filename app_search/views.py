@@ -3,145 +3,26 @@ import pickle
 import string
 import re
 import os
-import operator
+# import operator
 import itertools
 from datetime import datetime
 import os
 from django.http import JsonResponse
 
+from .app_search_modules.general_functionality import remove_punctuation, PcaDataProcessor
+from .app_search_modules.normal_search_functionality import normal_search
+from .app_search_modules.regex_search_functionality import word_type_counts_list, regex_search
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# opening database
-open_object = open(BASE_DIR + "/data/database/database_list.pickle", "rb")
-database_list = pickle.load(open_object)
-open_object.close()
+with open(f"{BASE_DIR}/data/database/database_list.pickle", "rb") as open_object:
+    database_list = pickle.load(open_object)
 
 # setting up general variables for the search function
 exotic_punctuation = ["“", "”", "’", "‘", "—"]
 cut_off_points = []
 
-
-########################
-# helper functions START
-########################
-
-# FUNCTION 1
-# the function below returns a list of tuples - word_type, count. It is used in the regex search
-def word_type_counts_list(some_list):
-    types_dict = {}
-    for word in some_list:
-        if word in types_dict:
-            types_dict[word] += 1
-        else:
-            types_dict[word] = 1
-    results = sorted(types_dict.items(), key=operator.itemgetter(1), reverse=True)
-
-    # # the code below for cutting the results displayed to a managable number...
-    # types_found_number = len(results)
-    # types_displayed = types_found_number
-    # if types_found_number > 100:
-    #     results = results[0:100]
-    #     types_displayed = 100
-
-    return results
-
-
-# FUNCTION 2
-# the function performs "normal search" in the main find_phrase function
-def normal_search(user_expression, element, user_expression_length):
-    single_result_dict = {}
-    if user_expression in element[25]:
-        cut_off_points = []
-        element_length = len(element[25])
-        element_expression_counter = 0
-        for element_letter in element[25]:
-            if user_expression[0] == element_letter:
-                # this additional condition necessary to exclude cases of longer words containing the user
-                # expression later, e.g. woman contains man - there were problems with this
-                # if the word was not the first, but second or third...
-                if element_expression_counter == 0:
-                    if element_expression_counter + user_expression_length == element_length:
-                        cut_off_points.append(element_expression_counter)
-                        cut_off_points.append(element_expression_counter + user_expression_length)
-                    elif user_expression == element[25][
-                                            element_expression_counter:element_expression_counter + user_expression_length] and (
-                            element[25][
-                                element_expression_counter + user_expression_length] == " " or
-                            element[25][
-                                element_expression_counter + user_expression_length] in string.punctuation or
-                            element[25][
-                                element_expression_counter + user_expression_length] in exotic_punctuation):
-                        cut_off_points.append(element_expression_counter)
-                        cut_off_points.append(element_expression_counter + user_expression_length)
-                # this additional condition necessary to exclude cases of longer words containing the user
-                # expression later, e.g. woman contains man - there were problems with this if the word
-                # was not the first, but second or third...
-                elif element[25][element_expression_counter - 1] == ' ':
-                    if element_expression_counter + user_expression_length == element_length:
-                        cut_off_points.append(element_expression_counter)
-                        cut_off_points.append(element_expression_counter + user_expression_length)
-                    elif user_expression == element[25][
-                                            element_expression_counter:element_expression_counter + user_expression_length] and (
-                            element[25][
-                                element_expression_counter + user_expression_length] == " " or
-                            element[25][
-                                element_expression_counter + user_expression_length] in string.punctuation or
-                            element[25][
-                                element_expression_counter + user_expression_length] in exotic_punctuation):
-                        cut_off_points.append(element_expression_counter)
-                        cut_off_points.append(element_expression_counter + user_expression_length)
-            element_expression_counter += 1
-
-        parts = []
-        if len(cut_off_points) > 0:
-            parts.append(element[14][:cut_off_points[0]])
-            cut_off_points_counter = 1
-            cut_off_points_length = len(cut_off_points)
-            for cut_off_point in cut_off_points:
-                if cut_off_points_counter < cut_off_points_length:
-                    parts.append(element[14][cut_off_point:cut_off_points[cut_off_points_counter]])
-                    cut_off_points_counter += 1
-
-            parts.append(element[14][cut_off_points[cut_off_points_counter - 1]:])
-
-            # this creates the json file - in the future I may add or remove some parts from this
-            single_result_dict = {'section': str(element[2]),
-                                  'author': str(element[3]),
-                                  'novel': element[4],
-                                  'chapter': element[5],
-                                  'reader': str(element[6]),
-                                  'readers_gender': element[7],
-                                  'readers_dialect': element[8],
-                                  'genre': element[9],
-                                  'authors_gender': element[10],
-                                  'audio_file_name': element[11],
-                                  'textunit': element[14],
-                                  'parts': parts,
-                                  'alignment': element[16],
-                                  'sentence_type': element[20],
-                                  'context': element[21],
-                                  'textunit_start': str(element[23]),
-                                  'textunit_end': str(element[24]),
-                                  'order_in_chapter': str(element[1])
-                                  }
-    return single_result_dict
-
-
-def regex_search(database_list, user_expression, user_expression_regex, words_found_list, element):
-    user_expression_compiled = re.compile(user_expression_regex)
-    # the condition below checks if a regular expression appears in a string (which is without
-    # without capital letters; earlier I used 13, which is without caps and punctuation)
-    if re.search(user_expression_compiled, element[25]):
-        word_found = re.findall(user_expression_compiled, element[25])
-        # the line below changes word_found to be used to count textunits rather than tokens...
-        word_found = list(set(word_found))
-        if len(word_found) > 1:
-            for word in word_found:
-                words_found_list.append(word)
-        else:
-            words_found_list.append(word_found[0])
-
-    return words_found_list
 
 
 ########################
@@ -157,68 +38,16 @@ def search(request):
     user_expression = return_value['user_search_field_value']
     filtering_data = return_value['checked_string']
     database_indexes = return_value['database_indexes_string']
-    
 
-
-
-
-    # removing punctuation
-    for c in string.punctuation:  # this removes punctuation
-        user_expression = user_expression.replace(c, "")
-    for c in exotic_punctuation:
-        user_expression = user_expression.replace(c, "")  # this removes more exotic punctuation
-
-    if filtering_data == 'all':
-        filtering_data = []
-    else:
-        filtering_data = filtering_data.split('-')
+    user_expression = remove_punctuation(user_expression)
+    pca_data_processor = PcaDataProcessor()
+    filtering_data = pca_data_processor.process_filtering_data(filtering_data)
     filtering_data_length = len(filtering_data)
-
-    if database_indexes == 'all':
-        database_indexes = []
-    else:
-        database_indexes = database_indexes.split('-')
-        database_indexes = list(map(int, database_indexes))
-
+    database_indexes = pca_data_processor.process_database_indexes(database_indexes)
+    user_expression = pca_data_processor.user_wildcards_to_regex(user_expression, vowel, consonant)
     global type_of_search
-    type_of_search = 'normal'
+    type_of_search = pca_data_processor.type_of_search
 
-    # transforming the user wildcards into python regular expressions
-    if "QQ1" in user_expression:
-        indices_list = [m.start() for m in re.finditer('QQ1', user_expression)]
-        index_counter = 0
-        for index in indices_list:
-            user_expression = user_expression[:index - index_counter] + '\w' + user_expression[
-                                                                               index - index_counter + 3:]
-            index_counter += 1
-        type_of_search = 'regex'
-
-    if "QQ2" in user_expression:
-        indices_list = [m.start() for m in re.finditer('QQ2', user_expression)]
-        for index in indices_list:
-            user_expression = user_expression[:index] + '\w+' + user_expression[index + 3:]
-        type_of_search = 'regex'
-
-    if "QQ3" in user_expression:
-        indices_list = [m.start() for m in re.finditer('QQ3', user_expression)]
-        index_counter = 0
-        for index in indices_list:
-            user_expression = user_expression[:index + index_counter] + vowel + user_expression[
-                                                                                index + index_counter + 3:]
-            index_counter += 5
-        type_of_search = 'regex'
-
-    if "QQ4" in user_expression:
-        indices_list = [m.start() for m in re.finditer('QQ4', user_expression)]
-        index_counter = 0
-        for index in indices_list:
-            user_expression = user_expression[:index + index_counter] + consonant + user_expression[
-                                                                                    index + index_counter + 3:]
-            index_counter += 19
-        type_of_search = 'regex'
-
-    # bottle stuff and other stuff...
-    # response.set_header('Origin', 'Poland')
     new_dict = {}
     next_search_start_index = 0
 
