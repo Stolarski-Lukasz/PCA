@@ -9,8 +9,8 @@ from datetime import datetime
 import os
 from django.http import JsonResponse
 
-from .app_search_modules.general_functionality import remove_punctuation, PcaDataProcessor
-from .app_search_modules.normal_search_functionality import normal_search
+from .app_search_modules.general_functionality import remove_punctuation, PcaDataProcessor, get_element_search_criteria
+from .app_search_modules.normal_search_functionality import normal_search, NormalSearch
 from .app_search_modules.regex_search_functionality import word_type_counts_list, regex_search
 
 
@@ -21,7 +21,7 @@ with open(f"{BASE_DIR}/data/database/database_list.pickle", "rb") as open_object
 
 # setting up general variables for the search function
 exotic_punctuation = ["“", "”", "’", "‘", "—"]
-cut_off_points = []
+# cut_off_points = []
 
 
 
@@ -45,109 +45,34 @@ def search(request):
     filtering_data_length = len(filtering_data)
     database_indexes = pca_data_processor.process_database_indexes(database_indexes)
     user_expression = pca_data_processor.user_wildcards_to_regex(user_expression, vowel, consonant)
-    global type_of_search
+    # global type_of_search
     type_of_search = pca_data_processor.type_of_search
 
-    new_dict = {}
     next_search_start_index = 0
-
-    # the search loop for 'mormal' cases which do not involve regex
-    # 25 stands here for text units without caps - first search is done here to ged indices,
-    # than the final parts are taken from 14, which is data_readable
     if type_of_search == 'normal':
         user_expression_length = len(user_expression)
         new_dict = {}
         textunit_counter = 0
         element_counter = 0
 
-        if filtering_data_length == 5:
-            for element in database_list:
-                element_counter += 1
-                if element[database_indexes[0]] == filtering_data[0] \
-                        and element[database_indexes[1]] == filtering_data[1] \
-                        and element[database_indexes[2]] == filtering_data[2] \
-                        and element[database_indexes[3]] == filtering_data[3] \
-                        and element[database_indexes[4]] == filtering_data[4]:
-                    single_result_dict = normal_search(user_expression=user_expression,
-                                                       element=element,
-                                                       user_expression_length=user_expression_length)
-                    if len(single_result_dict) > 0:
-                        new_dict['result' + str(textunit_counter)] = single_result_dict
-                        textunit_counter += 1
-                        if textunit_counter == pagination_bin_size:
-                            next_search_start_index = element_counter
-
-        elif filtering_data_length == 4:
-            for element in database_list:
-                element_counter += 1
-                if element[database_indexes[0]] == filtering_data[0] \
-                        and element[database_indexes[1]] == filtering_data[1] \
-                        and element[database_indexes[2]] == filtering_data[2] \
-                        and element[database_indexes[3]] == filtering_data[3]:
-                    single_result_dict = normal_search(user_expression=user_expression,
-                                                       element=element,
-                                                       user_expression_length=user_expression_length)
-                    if len(single_result_dict) > 0:
-                        new_dict['result' + str(textunit_counter)] = single_result_dict
-                        textunit_counter += 1
-                        if textunit_counter == pagination_bin_size:
-                            next_search_start_index = element_counter
-
-        elif filtering_data_length == 3:
-            for element in database_list:
-                element_counter += 1
-                if element[database_indexes[0]] == filtering_data[0] \
-                        and element[database_indexes[1]] == filtering_data[1] \
-                        and element[database_indexes[2]] == filtering_data[2]:
-                    single_result_dict = normal_search(user_expression=user_expression,
-                                                       element=element,
-                                                       user_expression_length=user_expression_length)
-                    if len(single_result_dict) > 0:
-                        new_dict['result' + str(textunit_counter)] = single_result_dict
-                        textunit_counter += 1
-                        if textunit_counter == pagination_bin_size:
-                            next_search_start_index = element_counter
-
-        elif filtering_data_length == 2:
-            for element in database_list:
-                element_counter += 1
-                if element[database_indexes[0]] == filtering_data[0] \
-                        and element[database_indexes[1]] == filtering_data[1]:
-                    single_result_dict = normal_search(user_expression=user_expression,
-                                                       element=element,
-                                                       user_expression_length=user_expression_length)
-                    if len(single_result_dict) > 0:
-                        new_dict['result' + str(textunit_counter)] = single_result_dict
-                        textunit_counter += 1
-                        if textunit_counter == pagination_bin_size:
-                            next_search_start_index = element_counter
-
-        elif filtering_data_length == 1:
-            for element in database_list:
-                element_counter += 1
-                if element[database_indexes[0]] == filtering_data[0]:
-                    single_result_dict = normal_search(user_expression=user_expression,
-                                                       element=element,
-                                                       user_expression_length=user_expression_length)
-                    if len(single_result_dict) > 0:
-                        new_dict['result' + str(textunit_counter)] = single_result_dict
-                        textunit_counter += 1
-                        if textunit_counter == pagination_bin_size:
-                            next_search_start_index = element_counter
-
-        # for now only this case - later correct the above...
-        elif filtering_data_length == 0:
-            for element in database_list:
-                element_counter += 1
-                single_result_dict = normal_search(user_expression=user_expression,
-                                                   element=element,
-                                                   user_expression_length=user_expression_length)
+        for element in database_list:
+            element_counter += 1
+            element_search_criteria = get_element_search_criteria(element, database_indexes, filtering_data)
+            if element_search_criteria == filtering_data:
+                normal_search_object = NormalSearch()
+                cut_off_points = normal_search_object.get_cut_off_points(user_expression, element, user_expression_length)
+                parts = normal_search_object.get_parts(element, cut_off_points)
+                single_result_dict = normal_search_object.get_single_results_dict(element, parts, cut_off_points)
+                # single_result_dict = normal_search(user_expression=user_expression,
+                #                                    element=element,
+                #                                    user_expression_length=user_expression_length)
+                
                 if len(single_result_dict) > 0:
                     new_dict['result' + str(textunit_counter)] = single_result_dict
                     textunit_counter += 1
-                    # here is the problem - by adding a new "strange" key to the dictionary
                     if textunit_counter == pagination_bin_size:
                         next_search_start_index = element_counter
+        
 
     # this is for regex searches
     elif type_of_search == 'regex':

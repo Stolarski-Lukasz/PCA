@@ -70,3 +70,12 @@ class PcaDataProcessor:
             self.type_of_search = 'regex'
             
         return user_expression
+
+
+def get_element_search_criteria(element, database_indexes, filtering_data):
+    element_search_criteria = []
+    database_indexes_counter = 0
+    for filtering_datum in filtering_data:
+        element_search_criteria.append(element[database_indexes[database_indexes_counter]])
+        database_indexes_counter += 1
+    return element_search_criteria
