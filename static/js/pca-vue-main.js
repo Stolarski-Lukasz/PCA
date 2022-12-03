@@ -350,7 +350,6 @@ const vue_app = Vue.createApp({
       let textunits_found_number = event.target.dataset.textunitsFoundNumber;
       let pagination_button_type = event.target.dataset.type
 
-      // the if statement checks which of the two buttons was clicked and then it sends the right request
       var formData = new FormData();
       formData.append('user_expression', user_search_field_value_frompaginationbutton)
       formData.append('filtering_data', checked_string)
@@ -359,13 +358,13 @@ const vue_app = Vue.createApp({
       formData.append('next_search_start_index', next_search_start_index)
       formData.append('textunits_found_number', textunits_found_number)
       if (pagination_button_type == 'previous') {
-        xhr.open('POST', '/previous_button/', true);
-        xhr.send(formData);
+        formData.append('pagination_button_type', "pagination_button_previous")
       }
       else if (pagination_button_type == 'next') {
-        xhr.open('POST', '/next_button/', true);
-        xhr.send(formData);
+        formData.append('pagination_button_type', "pagination_button_next")
       }
+      xhr.open('POST', '/pagination/', true);
+      xhr.send(formData);
     },
     get_info(event) {
       event.target.style.boxShadow = "0 0 0 3px #81b441"
