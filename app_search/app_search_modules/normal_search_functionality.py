@@ -14,27 +14,7 @@ class NormalSearch():
             element_expression_counter = 0
             for element_letter in element[25]:
                 if user_expression[0] == element_letter:
-                    # this additional condition necessary to exclude cases of longer words containing the user
-                    # expression later, e.g. woman contains man - there were problems with this
-                    # if the word was not the first, but second or third...
-                    if element_expression_counter == 0:
-                        if element_expression_counter + user_expression_length == element_length:
-                            cut_off_points.append(element_expression_counter)
-                            cut_off_points.append(element_expression_counter + user_expression_length)
-                        elif user_expression == element[25][
-                                                element_expression_counter:element_expression_counter + user_expression_length] and (
-                                element[25][
-                                    element_expression_counter + user_expression_length] == " " or
-                                element[25][
-                                    element_expression_counter + user_expression_length] in string.punctuation or
-                                element[25][
-                                    element_expression_counter + user_expression_length] in exotic_punctuation):
-                            cut_off_points.append(element_expression_counter)
-                            cut_off_points.append(element_expression_counter + user_expression_length)
-                    # this additional condition necessary to exclude cases of longer words containing the user
-                    # expression later, e.g. woman contains man - there were problems with this if the word
-                    # was not the first, but second or third...
-                    elif element[25][element_expression_counter - 1] == ' ':
+                    if element_expression_counter == 0 or element[25][element_expression_counter - 1] == ' ':
                         if element_expression_counter + user_expression_length == element_length:
                             cut_off_points.append(element_expression_counter)
                             cut_off_points.append(element_expression_counter + user_expression_length)
@@ -50,6 +30,7 @@ class NormalSearch():
                             cut_off_points.append(element_expression_counter + user_expression_length)
                 element_expression_counter += 1
         return cut_off_points
+
 
 
     def get_parts(self, element, cut_off_points):
@@ -90,13 +71,4 @@ class NormalSearch():
                                     'order_in_chapter': str(element[1])
                                     }
         return single_result_dict
-
-    # this method does not make code simpler and it does not work properly so far
-    # def get_final_results_dict(self, single_result_dict, pagination_bin_size, element_counter, new_dict):
-    #     if len(single_result_dict) > 0:
-    #         new_dict['result' + str(textunit_counter)] = single_result_dict
-    #         textunit_counter += 1
-    #         if textunit_counter == pagination_bin_size:
-    #             next_search_start_index = element_counter
-    #     return new_dict
 
