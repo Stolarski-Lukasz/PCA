@@ -32,7 +32,6 @@ class NormalSearch():
         return cut_off_points
 
 
-
     def get_parts(self, element, cut_off_points):
         parts = []
         if self.user_expression_in_element and cut_off_points:

@@ -17,3 +17,6 @@ def tutorial(request):
 @csrf_exempt
 def contact(request):
     return render(request, 'contact.html')
+
+# remove
+# example = "example from app_base"

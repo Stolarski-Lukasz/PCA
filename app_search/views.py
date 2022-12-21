@@ -10,6 +10,7 @@ from .app_search_modules.general_functionality import PcaDataProcessor, remove_p
 from .app_search_modules.normal_search_functionality import NormalSearch
 from .app_search_modules.regex_search_functionality import RegexSearch
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(f"{BASE_DIR}/data/database/database_list.pickle", "rb") as open_object:
@@ -37,6 +38,7 @@ def search(request):
     user_expression = pca_data_processor.user_wildcards_to_regex(user_expression, vowel, consonant)
     type_of_search = pca_data_processor.type_of_search
 
+    # 'norma' search
     next_search_start_index = 0
     if type_of_search == 'normal':
         user_expression_length = len(user_expression)
@@ -58,6 +60,7 @@ def search(request):
                     if textunit_counter == pagination_bin_size:
                         next_search_start_index = element_counter
         
+    # 'regex' search
     elif type_of_search == 'regex':
         new_dict = {}
         regex_search_object = RegexSearch()
@@ -149,30 +152,3 @@ def pagination(request):
     new_dict['textunits_found_number'] = textunits_found_number
 
     return JsonResponse(new_dict)
-
-
-@csrf_exempt
-def create_audio(request):
-    return_value = request.POST.dict()
-    audio_file_name = return_value['audio_file_name']
-    textunit_start = return_value['textunit_start']
-    textunit_duration = return_value['textunit_duration']
-    start_buffer = return_value['start_buffer']
-    end_buffer = return_value['end_buffer']
-
-    resulting_audio_name = ''
-    for filename in os.listdir(BASE_DIR + "/data/audio"):
-        if filename == audio_file_name + '.mp3':
-            resulting_audio_name = datetime.now().strftime('%Y_%m_%d %H_%M_%S_%f') + '.mp3'
-            
-            ffmpeg_command = 'ffmpeg -ss ' + str(float(textunit_start) - float(start_buffer)) + ' -t ' + str(
-                float(textunit_duration) + float(start_buffer) +
-                float(end_buffer)) + ' -i ' + BASE_DIR + '/"data/audio/' + \
-                filename + '" -c copy ' + '"' + BASE_DIR + '/media/' + resulting_audio_name + '"'
-        
-            os.system(ffmpeg_command)
-            break
-
-    resulting_audio_name_for_frontend = "/media/" + resulting_audio_name
-
-    return JsonResponse({'resulting_audio_file': resulting_audio_name_for_frontend})
