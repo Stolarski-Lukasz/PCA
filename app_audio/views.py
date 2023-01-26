@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 import os
 from django.http import JsonResponse
-# from app_search.views import example
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(BASE_DIR)
